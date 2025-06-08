@@ -2,6 +2,9 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AdherentController;
+use App\Http\Controllers\Auth\PasswordController;
+
 
 // Route publique (page d'accueil)
 Route::get('/', function () {
@@ -18,7 +21,19 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    // Page de changement de mot de passe
+         Route::get('user/password', [PasswordController::class, 'edit'])
+              ->name('password.edit');
+
+         // Traitement de la mise à jour
+         Route::put('user/password', [PasswordController::class, 'update'])
+              ->name('password.update');
 });
+
+
+
+
+
 
 // ---------------------------------------------------------------------------
 //  Routes réservées aux secrétaires
@@ -37,12 +52,20 @@ Route::middleware(['auth', 'secretaire'])
          Route::get('adherents/archives', [\App\Http\Controllers\AdherentController::class, 'archived'])
               ->name('adherents.archived');
 
+     // → À placer AVANT la resource
+Route::get('adherents/cotisations', [AdherentController::class, 'cotisations'])
+     ->name('adherents.cotisations');
+
          // 3) Désarchiver un adhérent (POST)
          Route::post('adherents/{adherent}/restore', [\App\Http\Controllers\AdherentController::class, 'restore'])
               ->name('adherents.restore');
 
+              
+
          // 4) CRUD complet pour les adhérents (index, create, store, show, edit, update, destroy)
          Route::resource('adherents', \App\Http\Controllers\AdherentController::class);
+
+         
      });
 
 // ---------------------------------------------------------------------------

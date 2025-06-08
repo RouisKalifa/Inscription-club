@@ -166,7 +166,39 @@
                            value="{{ old('date_certificat') }}"
                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-200 focus:border-indigo-500" />
                 </div>
+
+                <div class="mb-4">
+  <label for="date_cotisation" class="block text-sm font-medium text-gray-700">
+    Date de cotisation
+  </label>
+  <input type="date"
+         name="date_cotisation"
+         id="date_cotisation"
+         value="{{ old('date_cotisation', $adherent->date_cotisation ?? '') }}"
+         class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+  />
+</div>
+
+
             </div>
+
+            <div class="mb-4">
+  <label class="flex items-center space-x-2">
+    <input type="checkbox"
+           name="consentement_rgpd"
+           value="1"
+           required
+           class="mt-1" />
+    <span>
+      J’accepte que mes données personnelles soient collectées et traitées.
+    </span>
+  </label>
+  @error('consentement_rgpd')
+    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+  @enderror
+</div>
+
+
 
             {{-- Bouton de soumission --}}
             <div class="mt-6">

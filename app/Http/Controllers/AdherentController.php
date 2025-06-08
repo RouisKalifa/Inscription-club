@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Adherent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage; // (si jamais vous supprimez la photo, mais pas obligatoire pour restore)
+use Illuminate\Validation\Rules\Password;
+
 
 class AdherentController extends Controller
 {
@@ -37,7 +39,16 @@ class AdherentController extends Controller
     // 1) Valider le compte utilisateur
     $request->validate([
         'email_user'                     => ['required', 'email', 'unique:users,email'],
-        'password_user'                  => ['required', 'string', 'min:6', 'confirmed'],
+        'password_user'                  => [
+    'required',
+    'string',
+    'confirmed',
+    Password::min(12)      // ≥ 12 caractères
+        ->mixedCase()      // majuscule + minuscule
+        ->letters()        // au moins une lettre
+        ->numbers()        // au moins un chiffre
+        ->symbols(),       // au moins un caractère spécial
+],
         // Ensuite on ajoute les validations déjà en place pour Adherent :
         'prenom'                         => ['required', 'string', 'max:255'],
         'nom'                            => ['required', 'string', 'max:255'],
@@ -49,6 +60,8 @@ class AdherentController extends Controller
         'statut'                         => ['required', 'string', 'in:adhérent,coach,président'],
         'photo_path'                     => ['nullable', 'image', 'max:2048'],
         'date_certificat'                => ['nullable', 'date'],
+        'date_cotisation'    => ['nullable', 'date'],   // ← bien une règle
+        'consentement_rgpd'    => ['accepted'],   // ← case cochée obligatoirement
     ]);
 
     // 2) Créer le compte utilisateur (rôle nageur)
@@ -63,8 +76,12 @@ class AdherentController extends Controller
     $validatedAdherent = $request->only([
         'prenom', 'nom', 'date_naissance', 'adresse',
         'ville', 'code_postal', 'telephone', 'statut',
-        'date_certificat'
+        'date_certificat','date_cotisation', // ← ajouté
     ]);
+
+    // Enregistres le consentement
+$validatedAdherent['consentement_rgpd_at'] = now();
+
     if ($request->hasFile('photo_path') && $request->file('photo_path')->isValid()) {
         $chemin = $request->file('photo_path')
                           ->store('adherents_photos', 'public');
@@ -122,6 +139,7 @@ class AdherentController extends Controller
         'statut'         => ['required', 'string', 'in:adhérent,coach,président'],
         'photo_path'     => ['nullable', 'image', 'max:2048'],
         'date_certificat'=> ['nullable', 'date'],
+        'date_cotisation'  => ['nullable', 'date'],    // ← ajouté
     ]);
 
     // 2) Si une nouvelle photo est uploadée, supprimer l’ancienne (le cas échéant) et stocker la nouvelle
@@ -192,6 +210,21 @@ class AdherentController extends Controller
             ->route('secretaire.adherents.archived')
             ->with('success', "L adhérent « {$adherent->prenom} {$adherent->nom} » a été désarchivé.");
     }
+
+
+    /**
+ * Affiche les cotisations des adhérents non archivés.
+ */
+public function cotisations()
+{
+    $adherents = Adherent::where('est_archive', false)
+                         ->orderBy('nom')
+                         ->orderBy('prenom')
+                         ->get();
+
+    return view('secretaire.adherents.cotisations', compact('adherents'));
+}
+
 
 
 

@@ -25,6 +25,8 @@ class Adherent extends Model
         // ← Nos deux nouveaux champs :
         'visible_trombinoscope',
         'visible_annuaire',
+        'date_cotisation',
+        'consentement_rgpd_at', // ← ajouté
     ];
 
     protected $casts = [
@@ -33,6 +35,8 @@ class Adherent extends Model
         'est_archive'           => 'boolean',
         'visible_trombinoscope' => 'boolean',
         'visible_annuaire'      => 'boolean',
+        'date_cotisation'  => 'date',   // ← ajouté
+        'consentement_rgpd_at' => 'datetime',
     ];
 
     public function user()

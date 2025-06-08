@@ -26,6 +26,13 @@
                             <x-nav-link :href="route('secretaire.adherents.index')" :active="request()->routeIs('secretaire.adherents.*')">
                                 {{ __('Adhérents') }}
                             </x-nav-link>
+                            <x-nav-link
+    :href="route('secretaire.adherents.cotisations')"
+    :active="request()->routeIs('secretaire.adherents.cotisations')"
+>
+    {{ __('Cotisations') }}
+</x-nav-link>
+
                         @elseif (Auth::user()->role === 'nageur')
                             <!-- Liens pour le rôle Nageur -->
                             <x-nav-link :href="route('nageur.espace')" :active="request()->routeIs('nageur.espace')">
@@ -70,6 +77,10 @@
                         <x-dropdown-link :href="route('profile.edit')">
                             {{ __('Profile') }}
                         </x-dropdown-link>
+
+                        <x-dropdown-link :href="route('password.edit')">
+    {{ __('Changer de mot de passe') }}
+</x-dropdown-link>
 
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">

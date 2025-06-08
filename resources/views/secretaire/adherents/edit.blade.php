@@ -149,6 +149,19 @@
                 @enderror
             </div>
 
+
+            <div class="mb-4">
+  <label for="date_cotisation" class="block text-sm font-medium text-gray-700">
+    Date de cotisation
+  </label>
+  <input type="date"
+         name="date_cotisation"
+         id="date_cotisation"
+         value="{{ old('date_cotisation', $adherent->date_cotisation ?? '') }}"
+         class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+  />
+</div>
+
             <!-- Boutons -->
             <div class="mt-6 space-x-4">
                 <button type="submit"

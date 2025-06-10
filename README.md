@@ -1,4 +1,4 @@
-adherent : # Gestion des Adhérents - LyonPalme
+
  
 ![readme_logo__1_](https://github.com/user-attachments/assets/841f5181-8b7b-4d87-8a26-13521fc9b991)
  
@@ -48,8 +48,8 @@ Pour exécuter ce projet, vous devez avoir Debian, Apache2, Mariadb, Laravel, No
 Tout d'abord, vous devez cloner le projet :
  
 ```bash
-   git clone https://github.com/Lilly-22/gestion_adherent.git
-   cd gestion_adherent
+   git clone https://github.com/RouisKalifa/Inscription-club
+   cd Inscription-club
    ```
  
 Puis vous devez vous placer dans le projet et accorder les droits à deux fichiers en utilisant les commandes ci-dessous. Assurez-vous de remplacer "votreusername" par votre nom d'utilisateur sur votre machine :
@@ -146,8 +146,8 @@ Dans ce dossier on va mettre le virtual host :
  
      ServerAdmin webmaster@thedomain.com
  
-     DocumentRoot /var/www/websites/gestion_adherents_lp/public
-<Directory /var/www/websites/gestion_adherents_lp/public>
+     DocumentRoot /var/www/websites/Inscription-club/public
+<Directory /var/www/websites/Inscription-club/public>
  
          AllowOverride All
 </Directory>
@@ -185,11 +185,12 @@ sudo a2enmod rewrite proxy_fcgi setenvif
 ```
 ## Utilisation
  
-Une fois l'installation terminée, vous pouvez vous connecter à l'application en utilisant les identifiants créés juste avant. Une fois connecté, vous pourrez y retrouver :
+Une fois l'installation terminée, vous pourrez taper les url suivantes :
+
+- http://localhost/register (le lien pour inscrire une secretaire)
+
+- http://localhost/login (le lien pour se connecter secretaire ou adherent)
+
+
  
-- L’accès a la modification de tout le compte.
-- Trombinoscope.
-- L'Annuaire.
-- Création de comptes.
-Si aucun utilisateur n’existe, créez-en un via l’interface d’inscription ou via un seeder.
-Exécutez la commande npm run build, démarrez le serveur Apache2 avec la commande sudo service apache2 start et vérifiez que votre serveur MariaDB est toujours en cours d'exécution. Après cela, vous pourrez accéder à l'application et vous connecter avec l'utilisateur que vous avez créé.
+

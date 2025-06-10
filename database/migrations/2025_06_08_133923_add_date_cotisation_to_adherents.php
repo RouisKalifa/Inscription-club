@@ -12,8 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('adherents', function (Blueprint $t) {
-        $t->date('date_cotisation')->nullable()->after('date_certificat');
-    });
+            // Passage de date_cotisation de date() à text() pour le chiffrement
+            $t->text('date_cotisation')
+              ->nullable()
+              ->after('date_certificat');
+        });
     }
 
     /**
@@ -22,7 +25,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('adherents', function (Blueprint $t) {
-        $t->dropColumn('date_cotisation');
-    });
+            $t->dropColumn('date_cotisation');
+        });
     }
 };

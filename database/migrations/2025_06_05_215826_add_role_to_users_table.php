@@ -8,25 +8,21 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            // On ajoute un champ ENUM 'secretaire' ou 'nageur'
-            $table->enum('role', ['secretaire', 'nageur'])
-                  ->default('nageur')
-                  ->after('password');
+            // Passage de l'ENUM à TEXT pour stocker les données encryptées
+            $table->text('role')
+          ->nullable()
+          ->after('password');
         });
     }
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('role');

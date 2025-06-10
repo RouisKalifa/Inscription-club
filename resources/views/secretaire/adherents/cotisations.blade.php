@@ -27,9 +27,24 @@
               <td class="px-4 py-2 border">{{ $adh->nom }}</td>
               <td class="px-4 py-2 border">{{ $adh->prenom }}</td>
               <td class="px-4 py-2 border">
-                {{ $adh->date_cotisation
-                    ? $adh->date_cotisation->format('d/m/Y')
-                    : 'Non renseignée' }}
+                @php
+                  // Récupération brute
+                  $raw = $adh->date_cotisation;
+                  
+                  // Tentative de déchiffrement, sinon on garde la valeur brute
+                  try {
+                      $decrypted = \Illuminate\Support\Facades\Crypt::decryptString($raw);
+                  } catch (\Throwable $e) {
+                      $decrypted = $raw;
+                  }
+
+                  // Format si date non vide
+                  $formatted = $decrypted
+                      ? \Illuminate\Support\Carbon::parse($decrypted)->format('d/m/Y')
+                      : null;
+                @endphp
+
+                {{ $formatted ?? 'Non renseignée' }}
               </td>
             </tr>
           @endforeach

@@ -14,32 +14,24 @@ return new class extends Migration
         Schema::create('adherents', function (Blueprint $table) {
             $table->id();
 
-            // Si chaque adhérent est lié à un compte utilisateur (login), on met une FK vers users
+            // Clé étrangère vers users
             $table->foreignId('user_id')
                   ->nullable()
                   ->constrained()
                   ->onDelete('set null');
 
-            // Informations personnelles de l’adhérent
-            $table->string('prenom');
-            $table->string('nom');
-            $table->date('date_naissance')->nullable();
-            $table->string('adresse')->nullable();
-            $table->string('ville')->nullable();
-            $table->string('code_postal', 10)->nullable();
-            $table->string('telephone')->nullable();
-
-            // Statut dans le club (ex. président, coach, adhérent ordinaire…)
-            $table->string('statut')->default('adhérent');
-
-            // Chemin vers la photo du trombinoscope
-            $table->string('photo_path')->nullable();
-
-            // Date d’expiration du certificat médical
-            $table->date('date_certificat')->nullable();
-
-            // Archivage : si l’adhérent n’est plus actif, on met TRUE
-            $table->boolean('est_archive')->default(false);
+            // Tous ces champs deviennent TEXT pour stocker le JSON chiffré
+            $table->text('prenom');
+            $table->text('nom');
+            $table->text('date_naissance')->nullable();
+            $table->text('adresse')->nullable();
+            $table->text('ville')->nullable();
+            $table->text('code_postal')->nullable();
+            $table->text('telephone')->nullable();
+            $table->text('statut')->nullable();
+            $table->text('photo_path')->nullable();
+            $table->text('date_certificat')->nullable();
+            $table->text('est_archive')->nullable();
 
             $table->timestamps();
         });

@@ -2,6 +2,29 @@
     <div class="container mx-auto p-4 max-w-xl">
         <h1 class="text-2xl font-bold mb-4">Modifier l’adhérent</h1>
 
+        @php
+            // Fonction utilitaire pour déchiffrer et formater en Y-m-d
+            function decryptDate(?string $raw): ?string {
+                if (!$raw) {
+                    return null;
+                }
+                try {
+                    $decrypted = \Illuminate\Support\Facades\Crypt::decryptString($raw);
+                } catch (\Throwable $e) {
+                    $decrypted = $raw;
+                }
+                try {
+                    return \Illuminate\Support\Carbon::parse($decrypted)->format('Y-m-d');
+                } catch (\Throwable $e) {
+                    return null;
+                }
+            }
+
+            $dateNaissanceEdit   = decryptDate($adherent->date_naissance);
+            $dateCertificatEdit  = decryptDate($adherent->date_certificat);
+            $dateCotisationEdit  = decryptDate($adherent->date_cotisation);
+        @endphp
+
         <form action="{{ route('secretaire.adherents.update', $adherent) }}" 
               method="POST" 
               enctype="multipart/form-data">
@@ -42,7 +65,7 @@
                 <input type="date"
                        name="date_naissance"
                        id="date_naissance"
-                       value="{{ old('date_naissance', $adherent->date_naissance?->format('Y-m-d')) }}"
+                       value="{{ old('date_naissance', $dateNaissanceEdit) }}"
                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:border-indigo-500" />
                 @error('date_naissance')
                     <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
@@ -142,25 +165,24 @@
                 <input type="date"
                        name="date_certificat"
                        id="date_certificat"
-                       value="{{ old('date_certificat', $adherent->date_certificat?->format('Y-m-d')) }}"
+                       value="{{ old('date_certificat', $dateCertificatEdit) }}"
                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:border-indigo-500" />
                 @error('date_certificat')
                     <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                 @enderror
             </div>
 
-
+            <!-- Date de cotisation -->
             <div class="mb-4">
-  <label for="date_cotisation" class="block text-sm font-medium text-gray-700">
-    Date de cotisation
-  </label>
-  <input type="date"
-         name="date_cotisation"
-         id="date_cotisation"
-         value="{{ old('date_cotisation', $adherent->date_cotisation ?? '') }}"
-         class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-  />
-</div>
+                <label for="date_cotisation" class="block text-sm font-medium text-gray-700">
+                    Date de cotisation
+                </label>
+                <input type="date"
+                       name="date_cotisation"
+                       id="date_cotisation"
+                       value="{{ old('date_cotisation', $dateCotisationEdit) }}"
+                       class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:border-indigo-500" />
+            </div>
 
             <!-- Boutons -->
             <div class="mt-6 space-x-4">

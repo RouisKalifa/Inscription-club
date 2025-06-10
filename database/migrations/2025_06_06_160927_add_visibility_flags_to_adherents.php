@@ -12,12 +12,13 @@ class AddVisibilityFlagsToAdherents extends Migration
     public function up()
     {
         Schema::table('adherents', function (Blueprint $table) {
-            // Ajoute deux colonnes booléennes après “statut”
-            $table->boolean('visible_trombinoscope')
-                  ->default(true)
+            // Passage des flags de boolean à text() pour le chiffrement
+            $table->text('visible_trombinoscope')
+                  ->nullable()
                   ->after('statut');
-            $table->boolean('visible_annuaire')
-                  ->default(true)
+
+            $table->text('visible_annuaire')
+                  ->nullable()
                   ->after('visible_trombinoscope');
         });
     }

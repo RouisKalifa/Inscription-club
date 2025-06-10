@@ -18,13 +18,39 @@
                 </div>
             @endif
 
+            @php
+                // Gestion de la date de naissance
+                $rawNaissance = $adherent->date_naissance;
+                $dateNaissance = null;
+
+                if ($rawNaissance) {
+                    try {
+                        $decrypted = \Illuminate\Support\Facades\Crypt::decryptString($rawNaissance);
+                    } catch (\Throwable $e) {
+                        $decrypted = $rawNaissance;
+                    }
+                    $dateNaissance = \Illuminate\Support\Carbon::parse($decrypted);
+                }
+
+                // Gestion de la date de certificat
+                $rawCertif = $adherent->date_certificat;
+                $dateCertificat = null;
+
+                if ($rawCertif) {
+                    try {
+                        $decryptedCertif = \Illuminate\Support\Facades\Crypt::decryptString($rawCertif);
+                    } catch (\Throwable $e) {
+                        $decryptedCertif = $rawCertif;
+                    }
+                    $dateCertificat = \Illuminate\Support\Carbon::parse($decryptedCertif);
+                }
+            @endphp
+
             <p><strong>ID :</strong> {{ $adherent->id }}</p>
             <p><strong>Prénom :</strong> {{ $adherent->prenom }}</p>
             <p><strong>Nom :</strong> {{ $adherent->nom }}</p>
             <p><strong>Date de naissance :</strong>
-               {{ $adherent->date_naissance 
-                    ? $adherent->date_naissance->format('d/m/Y')
-                    : 'Non renseignée' }}
+                {{ $dateNaissance ? $dateNaissance->format('d/m/Y') : 'Non renseignée' }}
             </p>
             <p><strong>Adresse :</strong> {{ $adherent->adresse ?? 'Non renseignée' }}</p>
             <p><strong>Ville :</strong> {{ $adherent->ville ?? 'Non renseignée' }}</p>
@@ -32,11 +58,9 @@
             <p><strong>Téléphone :</strong> {{ $adherent->telephone ?? 'Non renseigné' }}</p>
             <p><strong>Statut :</strong> {{ ucfirst($adherent->statut) }}</p>
             <p><strong>Date certificat médical :</strong>
-               {{ $adherent->date_certificat 
-                    ? $adherent->date_certificat->format('d/m/Y')
-                    : 'Non renseignée' }}
+                {{ $dateCertificat ? $dateCertificat->format('d/m/Y') : 'Non renseignée' }}
             </p>
-            <p><strong>Archivage :</strong> 
+            <p><strong>Archivage :</strong>
                {{ $adherent->est_archive ? 'Oui' : 'Non' }}
             </p>
 

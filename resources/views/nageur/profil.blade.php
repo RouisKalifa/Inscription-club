@@ -8,6 +8,26 @@
             </div>
         @endif
 
+        @php
+            // Helper pour déchiffrer et formater les dates
+            function decryptDateValue(?string $raw): ?string {
+                if (!$raw) return null;
+                try {
+                    $val = \Illuminate\Support\Facades\Crypt::decryptString($raw);
+                } catch (\Throwable $e) {
+                    $val = $raw;
+                }
+                try {
+                    return \Illuminate\Support\Carbon::parse($val)->format('Y-m-d');
+                } catch (\Throwable $e) {
+                    return null;
+                }
+            }
+
+            $dateNaissanceValue = decryptDateValue($adherent->date_naissance);
+            $dateCertificatValue = decryptDateValue($adherent->date_certificat);
+        @endphp
+
         <form action="{{ route('nageur.profil.update') }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
@@ -46,7 +66,7 @@
                 <input type="date"
                        name="date_naissance"
                        id="date_naissance"
-                       value="{{ old('date_naissance', $adherent->date_naissance?->format('Y-m-d')) }}"
+                       value="{{ old('date_naissance', $dateNaissanceValue) }}"
                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:border-indigo-500" />
                 @error('date_naissance')
                     <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
@@ -131,7 +151,7 @@
                 <input type="date"
                        name="date_certificat"
                        id="date_certificat"
-                       value="{{ old('date_certificat', $adherent->date_certificat?->format('Y-m-d')) }}"
+                       value="{{ old('date_certificat', $dateCertificatValue) }}"
                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:border-indigo-500" />
                 @error('date_certificat')
                     <p class="text-red-600 text-sm mt-1">{{ $message }}</p>

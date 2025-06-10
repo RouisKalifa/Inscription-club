@@ -13,11 +13,18 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+
+            // → passage en TEXT pour pouvoir stocker le JSON encrypté
+            $table->text('name');
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
+            $table->text('email_verified_at')->nullable();
+
+            // password reste en string (hashed → max 255)
             $table->string('password');
-            $table->rememberToken();
+
+            // remember_token chiffré lui aussi
+            $table->text('remember_token')->nullable();
+
             $table->timestamps();
         });
 

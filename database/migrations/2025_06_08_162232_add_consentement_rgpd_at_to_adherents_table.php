@@ -12,11 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('adherents', function (Blueprint $table) {
-        $table->timestamp('consentement_rgpd_at')
-              ->nullable()
-              ->after('est_archive')
-              ->comment('Horodatage du consentement RGPD');
-    });
+            // Passage de consentement_rgpd_at de timestamp à text() pour le chiffrement
+            $table->text('consentement_rgpd_at')
+                  ->nullable()
+                  ->after('est_archive')
+                  ->comment('Horodatage du consentement RGPD');
+        });
     }
 
     /**
@@ -25,7 +26,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('adherents', function (Blueprint $table) {
-        $table->dropColumn('consentement_rgpd_at');
-    });
+            $table->dropColumn('consentement_rgpd_at');
+        });
     }
 };
